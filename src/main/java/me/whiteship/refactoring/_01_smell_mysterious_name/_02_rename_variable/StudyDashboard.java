@@ -25,8 +25,8 @@ public class StudyDashboard {
         GHRepository repository = gitHub.getRepository("whiteship/live-study");
         GHIssue issue = repository.getIssue(30);
 
-        List<GHIssueComment> comments = issue.getComments();
-        for (GHIssueComment comment : comments) {
+        List<GHIssueComment> reviews = issue.getComments();
+        for (GHIssueComment comment : reviews) {
             usernames.add(comment.getUserName());
             this.reviews.add(comment.getBody());
         }
@@ -43,7 +43,18 @@ public class StudyDashboard {
     public static void main(String[] args) throws IOException {
         StudyDashboard studyDashboard = new StudyDashboard();
         studyDashboard.loadReviews();
-        studyDashboard.getUsernames().forEach(name -> System.out.println(name));
-        studyDashboard.getReviews().forEach(review -> System.out.println(review));
+        studyDashboard.getUsernames().forEach(System.out::println);
+        studyDashboard.getReviews().forEach(System.out::println);
     }
 }
+
+/**
+ * 변수 이름 바꾸기
+ *
+ * - 더 많이 사용되는 변수일수록 그 이름이 더 중요하다.
+ *  - 람다식에서 사용하는 변수 vs 함수의 매개변수
+ *
+ * - 다이나믹 타입을 지원하는 언어에서는 타입을 이름에 넣기도 한다.
+ *
+ * - 여러 함수에 걸쳐 쓰이는 필드 이름에는 더 많이 고민하고 이름을 짓는다.
+ */
