@@ -44,7 +44,12 @@ public class StudyDashboard {
         studyDashboard.printParticipants(15);
     }
 
-
-
-
 }
+
+/**
+ * 코드 정리하기
+ *
+ * - 관련있는 코드끼리 묶여있어야 코드를 더 쉽게 이해할 수 있다.
+ * - 함수에서 사용할 변수를 상단에 미리 정의하기 보다는, 해당 변수를 사용하는 코드 바로 위에 선언하자.
+ * - 관련있는 코드끼리 묶은 다음, 함수 추출하기(Extract Function)를 사용해서 더 깔끔하게 분리할 수 도 있다.
+ */
