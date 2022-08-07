@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -78,23 +77,16 @@ public class StudyDashboard {
             writer.print(header(participants.size()));
 
             participants.forEach(p -> {
-                String markdownForHomework = getMarkdownForParticipant(p.username(), p.homework());
+                String markdownForHomework = getMarkdownForParticipant(p);
                 writer.print(markdownForHomework);
             });
         }
     }
 
-    double getRate(Map<Integer, Boolean> homework) {
-        long count = homework.values().stream()
-                .filter(v -> v == true)
-                .count();
-        return (double) (count * 100 / this.totalNumberOfEvents);
-    }
-
-    private String getMarkdownForParticipant(String username, Map<Integer, Boolean> homework) {
-        return String.format("| %s %s | %.2f%% |\n", username,
-                checkMark(homework, this.totalNumberOfEvents),
-                getRate(homework));
+    private String getMarkdownForParticipant(Participant participant) {
+        return String.format("| %s %s | %.2f%% |\n", participant.username(),
+                checkMark(participant, this.totalNumberOfEvents),
+                participant.getRate(this.totalNumberOfEvents));
     }
 
     /**
@@ -118,10 +110,10 @@ public class StudyDashboard {
     /**
      * |:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
      */
-    private String checkMark(Map<Integer, Boolean> homework, int totalEvents) {
+    private String checkMark(Participant participant, int totalEvents) {
         StringBuilder line = new StringBuilder();
         for (int i = 1 ; i <= totalEvents ; i++) {
-            if(homework.containsKey(i) && homework.get(i)) {
+            if(participant.homework().containsKey(i) && participant.homework().get(i)) {
                 line.append("|:white_check_mark:");
             } else {
                 line.append("|:x:");
@@ -130,3 +122,15 @@ public class StudyDashboard {
         return line.toString();
     }
 }
+
+/**
+ * 객체 통째로 넘기기
+ *
+ * - 어떤 한 레코드에서 구할 수 있는 여러 값들을 함수에 전달하는 경우, 해당 매개변수를 레코드 하나로 교체할 수 있다.
+ *
+ * - 매개변수 목록을 줄일 수 있다. (향후에 추가할지도 모를 매개변수까지도..)
+ *
+ * - 이 기술을 적용하기 전에 의존성을 고려해야 한다.
+ *
+ * - 어쩌면 해당 메소드의 위치가 적절하지 않을 수도 있다. (기능 편애 "Feature Envy" 냄새에 해당한다.)
+ */
