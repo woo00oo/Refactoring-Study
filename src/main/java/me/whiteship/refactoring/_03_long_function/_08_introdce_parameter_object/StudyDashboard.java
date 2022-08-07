@@ -72,22 +72,24 @@ public class StudyDashboard {
             writer.print(header(totalNumberOfEvents, participants.size()));
 
             participants.forEach(p -> {
-                String markdownForHomework = getMarkdownForParticipant(totalNumberOfEvents, p);
+                String markdownForHomework = getMarkdownForParticipant(new ParticipantPrinter(totalNumberOfEvents, p));
                 writer.print(markdownForHomework);
             });
         }
     }
 
-    private double getRate(int totalNumberOfEvents, Participant p) {
-        long count = p.homework().values().stream()
+    private double getRate(ParticipantPrinter participantPrinter) {
+        long count = participantPrinter.p().homework().values().stream()
                 .filter(v -> v == true)
                 .count();
-        double rate = count * 100 / totalNumberOfEvents;
+        double rate = count * 100 / participantPrinter.totalNumberOfEvents();
         return rate;
     }
 
-    private String getMarkdownForParticipant(int totalNumberOfEvents, Participant p) {
-        return String.format("| %s %s | %.2f%% |\n", p.username(), checkMark(p, totalNumberOfEvents), getRate(totalNumberOfEvents, p));
+    private String getMarkdownForParticipant(ParticipantPrinter participantPrinter) {
+        return String.format("| %s %s | %.2f%% |\n", participantPrinter.p().username(),
+                checkMark(participantPrinter.p(), participantPrinter.totalNumberOfEvents()),
+                getRate(new ParticipantPrinter(participantPrinter.totalNumberOfEvents(), participantPrinter.p())));
     }
 
     /**
@@ -123,3 +125,18 @@ public class StudyDashboard {
         return line.toString();
     }
 }
+
+/**
+ * 매개변수 객체 만들기
+ *
+ * - 같은 매개변수들이 여러 메소드에 걸쳐 나타난다면 그 매개변수들을 묶은 자료 구조를 만들 수 있다.
+ *
+ * - 그렇게 만든 자료구조는 :
+ *
+ *  - 해당 데이터간의 관계를 보다 명시적으로 나타낼 수 있다.
+ *
+ *  - 함수에 전달할 매개변수 개수를 줄일 수 있다.
+ *
+ *  - 도메인을 이해하는데 중요한 역할을 하는 클래스로 발전할 수 도 있다.
+ *
+ */
