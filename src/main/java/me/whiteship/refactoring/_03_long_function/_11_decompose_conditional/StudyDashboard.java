@@ -62,15 +62,34 @@ public class StudyDashboard {
     }
 
     private Participant findParticipant(String username, List<Participant> participants) {
-        Participant participant;
-        if (participants.stream().noneMatch(p -> p.username().equals(username))) {
-            participant = new Participant(username);
-            participants.add(participant);
-        } else {
-            participant = participants.stream().filter(p -> p.username().equals(username)).findFirst().orElseThrow();
-        }
+        return isNewParticipant(username, participants) ? createNewParticipant(username, participants) : findExistingParticipant(username, participants);
+    }
 
+    private Participant findExistingParticipant(String username, List<Participant> participants) {
+        Participant participant;
+        participant = participants.stream().filter(p -> p.username().equals(username)).findFirst().orElseThrow();
         return participant;
     }
 
+    private Participant createNewParticipant(String username, List<Participant> participants) {
+        Participant participant;
+        participant = new Participant(username);
+        participants.add(participant);
+        return participant;
+    }
+
+    private boolean isNewParticipant(String username, List<Participant> participants) {
+        return participants.stream().noneMatch(p -> p.username().equals(username));
+    }
+
 }
+
+/**
+ * 조건문 분해하기
+ *
+ * - 여러 조건에 따라 달라지는 코드를 작성하다보면 종종 긴 함수가 만들어지는 것을 목격할 수 있다.
+ *
+ * - "조건"과 "액션" 모두 "의도"를 표현해야 한다.
+ *
+ * - 기술적으로는 "함수 추출하기"와 동일한 리팩토링이지만 의도만 다를 뿐이다.
+ */
