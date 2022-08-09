@@ -29,7 +29,7 @@ public class StudyDashboard {
 
     private void print() throws IOException, InterruptedException {
         checkGithubIssues(getGhRepository());
-        new StudyPrinter(this.totalNumberOfEvents, this.participants, PrinterMode.MARKDOWN).execute();
+        new MarkdownPrinter(this.totalNumberOfEvents, this.participants).execute();
     }
 
     private GHRepository getGhRepository() throws IOException {
@@ -89,3 +89,16 @@ public class StudyDashboard {
     }
 
 }
+
+/**
+ * 조건문을 다형성으로 바꾸기
+ *
+ * - 여러 타입에 따라 각기 다른 로직으로 처리해야 하는 경우에 다형성을 적용해서 조건문을 보다 명확하게 분리할 수 있다.
+ *
+ * - 반복되는 switch 문을 각기 다른 클래스를 만들어 제거할 수 있다.
+ *
+ * - 공통으로 사용되는 로직은 상위클래스에 두고 달라지는 부분만 하위클래스에 둠으로써, 달라지는 부분만 강조할 수 있다.
+ *
+ * - 모든 조건물을 다형성으로 바꿔야 하는 것은 아니다.
+ *
+ */
